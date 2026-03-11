@@ -16,15 +16,15 @@ export function calculatePortfolioPerformance(
 
   let PerformanceSummary = "";
 
-  if (percentageChange >= 50) {
+  if (percentageChange >= 30) {
     PerformanceSummary = "Excellent performance! Your investments are doing great.";
-  } else if (percentageChange >= 20) {
+  } else if (percentageChange >= 10) {
     PerformanceSummary = "Solid gain. Keep monitoring your investments.";
   } else if (percentageChange > 0) {
     PerformanceSummary = "Modest gain. Your portfolio is growing slowly.";
   } else if (percentageChange === 0) {
     PerformanceSummary = "No change. Your portfolio is holding steady.";
-  } else if (percentageChange > -20) {
+  } else if (percentageChange > -10) {
     PerformanceSummary = "Minor loss. Consider reviewing your investments.";
   } else {
     PerformanceSummary = "Significant loss. Immediate review recommended.";
