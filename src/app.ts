@@ -1,14 +1,14 @@
-import express from "express";
+import express, { Request, Response } from "express";
+import { calculatePortfolioPerformance } from "./portfolioPerformance";
 
-const app = express();
+export const app = express();
 
 app.use(express.json());
 
 /**
- * Health Check Endpoint
- * GET /api/v1/health
+ * Healthcheck endpoint
  */
-app.get("/api/v1/health", (req, res) => {
+app.get("/healthcheck", (req: Request, res: Response) => {
   res.status(200).json({
     status: "OK",
     uptime: process.uptime(),
@@ -17,4 +17,15 @@ app.get("/api/v1/health", (req, res) => {
   });
 });
 
-export default app;
+/**
+ * Portfolio calculation endpoint
+ */
+app.post("/portfolio", (req: Request, res: Response) => {
+
+  const { initialInvestment, currentValue } = req.body;
+
+  const result = calculatePortfolioPerformance(initialInvestment, currentValue);
+
+  res.status(200).json(result);
+
+});
