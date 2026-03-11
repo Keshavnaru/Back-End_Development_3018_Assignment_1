@@ -3,29 +3,33 @@ import { calculatePortfolioPerformance } from "./portfolioPerformance";
 
 export const app = express();
 
+// Middleware to parse JSON
 app.use(express.json());
 
-/**
- * Healthcheck endpoint
- */
-app.get("/healthcheck", (req: Request, res: Response) => {
+// Health check route
+app.get("/api/v1/health", (req: Request, res: Response) => {
   res.status(200).json({
-    status: "OK",
+    status: "ok",
     uptime: process.uptime(),
-    timestamp: new Date().toISOString(),
-    version: "1.0.0"
+    timestamp: Date.now(),
+    version: "1.0.0",
   });
 });
 
-/**
- * Portfolio calculation endpoint
- */
-app.post("/portfolio", (req: Request, res: Response) => {
-
+// Investment performance route (POST)
+app.post("/api/v1/investment", (req: Request, res: Response) => {
   const { initialInvestment, currentValue } = req.body;
 
-  const result = calculatePortfolioPerformance(initialInvestment, currentValue);
+  // Validate input
+  if (typeof initialInvestment !== "number" || typeof currentValue !== "number") {
+    return res.status(400).json({ error: "initialInvestment and currentValue must be numbers" });
+  }
 
-  res.status(200).json(result);
+  // Use the external function
+  const portfolioResult = calculatePortfolioPerformance(initialInvestment, currentValue);
 
+  // Round percentageChange to 2 decimals
+  portfolioResult.percentageChange = parseFloat(portfolioResult.percentageChange.toFixed(2));
+
+  res.status(200).json(portfolioResult);
 });
